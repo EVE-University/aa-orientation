@@ -13,7 +13,7 @@ class OrientationMenuItem(MenuItemHook):
         # setup menu entry for sidebar
         MenuItemHook.__init__(
             self,
-            _("orientation"),
+            _("Orientation"),
             "fas fa-cube fa-fw",
             "orientation:index",
             navactive=["orientation:"],
