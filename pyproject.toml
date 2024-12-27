@@ -35,6 +35,12 @@ dependencies = [
 [project.urls]
 Homepage = "https://eveuniversity.org/"
 
+Homepage = "https://github.com/EVE-University/aa-orientation"
+Documentation = "https://github.com/EVE-University/aa-orientation"
+Source = "https://github.com/EVE-University/aa-orientation"
+Tracker = "https://github.com/EVE-University/aa-orientation/issues"
+
+
 [tool.flit.module]
 name = "orientation"
 
