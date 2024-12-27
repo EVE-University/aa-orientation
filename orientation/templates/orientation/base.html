@@ -1,0 +1,12 @@
+{% extends 'allianceauth/base-bs5.html' %}
+{% load i18n %}
+
+{% block page_title %}{% translate "Orientation" %}{% endblock %}
+
+{% block content %}
+    <div class="aa-orientation-plugin">
+        <h2 class="page-header text-center">{% translate "New Members" %}</h2>
+
+        {% block details %}{% endblock %}
+    </div>
+{% endblock %}
