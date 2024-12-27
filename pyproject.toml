@@ -33,8 +33,6 @@ dependencies = [
 
 
 [project.urls]
-Homepage = "https://eveuniversity.org/"
-
 Homepage = "https://github.com/EVE-University/aa-orientation"
 Documentation = "https://github.com/EVE-University/aa-orientation"
 Source = "https://github.com/EVE-University/aa-orientation"
