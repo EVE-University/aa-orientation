@@ -1,8 +1,10 @@
 import logging
+
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from allianceauth.hrapplications.models import Application
+
 from orientation.models import NewMembers
 
 logger = logging.getLogger(__name__)
@@ -27,4 +29,6 @@ def app_change(instance, **kwargs):
                 new_member.delete()
                 logger.debug(f"New member entry deleted: {instance}")
             except NewMembers.DoesNotExist:
-                logger.debug(f"No NewMembers entry to delete for application: {instance}")
+                logger.debug(
+                    f"No NewMembers entry to delete for application: {instance}"
+                )
