@@ -8,3 +8,4 @@ from . import models
 
 
 admin.site.register(models.NewMembers)
+admin.site.register(models.OrientationAppConfig)

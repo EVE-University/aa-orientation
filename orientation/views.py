@@ -12,7 +12,7 @@ from orientation.models import NewMembers
 @permission_required("orientation.basic_access")
 def index(request):
     """List all NewMembers ordered by creation date."""
-    members = NewMembers.objects.order_by("member_talked_state", "created_date")
+    members = NewMembers.all_new_members_in_corp()
     return render(request, "orientation/index.html", {"members": members})
 
 
