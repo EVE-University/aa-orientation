@@ -12,6 +12,7 @@
                         <th>{% translate "Name" %}</th>
                         <th>{% translate "Created Date" %}</th>
                         <th>{% translate "Status" %}</th>
+                        <th>{% translate "Online Status" %}</th>
                         <th>{% translate "Actions" %}</th>
                     </tr>
                 </thead>
@@ -29,6 +30,17 @@
                                     {% endif %}
                                 </td>
                                 <td>
+                                    {% if member.online_status == "Online" %}
+                                        <span class="badge badge-success">{% translate "Online" %}</span>
+                                    {% elif member.online_status == "Offline" %}
+                                        <span class="badge badge-danger">{% translate "Offline" %}</span>
+                                    {% elif member.online_status == "No Character" %}
+                                        <span class="badge badge-warning">{% translate "No Character" %}</span>
+                                    {% else %}
+                                        <span class="badge badge-secondary">{% translate "Unknown" %}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
                                     {% if member.member_talked_state != member.MembershipStates.TALKED %}
                                         <button class="btn btn-success btn-mark-talked" data-id="{{ member.id }}">
                                             {% translate "Mark as Talked" %}
@@ -39,7 +51,7 @@
                         {% endfor %}
                     {% else %}
                     <tr>
-                        <td colspan="4">{% translate "No members to show." %}</td>
+                        <td colspan="5">{% translate "No members to show." %}</td>
                     </tr>
                     {% endif %}
                 </tbody>
@@ -68,7 +80,7 @@
                             const row = document.getElementById(`member-${memberId}`);
                             row.classList.add('table-success');
                             row.querySelector('td:nth-child(3)').innerText = '{% translate "Talked To" %}';
-                            const buttonCell = row.querySelector('td:nth-child(4)');
+                            const buttonCell = row.querySelector('td:nth-child(5)');
                             buttonCell.innerHTML = '';
                         } else {
                             alert(data.error || '{% translate "Failed to update member." %}');
@@ -86,10 +98,6 @@
 
 {% block extra_css %}
 <style>
-    .table-success {
-        background-color: #d4edda !important;
-    }
-
     td {
         align-content: center;
     }
