@@ -3,4 +3,4 @@
 # pylint: disable = invalid-name
 default_app_config = "orientation.apps.OrientationConfig"
 
-__version__ = "0.7.1"
+__version__ = "0.8.0"
