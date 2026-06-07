@@ -205,7 +205,7 @@ LOGOUT_REDIRECT_URL = "authentication:dashboard"  # destination after logging ou
 # - absolute urls eg 'http://example.com/dashboard'
 
 # scopes required on new tokens when logging in. Cannot be blank.
-LOGIN_TOKEN_SCOPES = ["publicData"]
+LOGIN_TOKEN_SCOPES = ["publicData", "esi-location.read_online.v1"]
 
 # number of days email verification links are valid for
 ACCOUNT_ACTIVATION_DAYS = 1

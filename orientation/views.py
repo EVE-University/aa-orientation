@@ -8,12 +8,13 @@ from django.core.cache import cache
 
 import requests
 from django.conf import settings
+from esi.models import Token
 
 from orientation.models import NewMembers
 
 
 def get_character_online_status(character_id):
-    """Check if an EVE character is currently online using ESI API."""
+    """Check if an EVE character is currently online using authenticated ESI API."""
     cache_key = f"online_status_{character_id}"
     cached_status = cache.get(cache_key)
 
@@ -21,31 +22,54 @@ def get_character_online_status(character_id):
         return cached_status
 
     try:
-        # Direct ESI API call to check online status
+        # Get a valid ESI token for this character with the required scope
+        required_scope = 'esi-location.read_online.v1'
+
+        # Try to find a valid token for this character with the required scope
+        try:
+            token = Token.objects.filter(
+                character_id=character_id,
+                scopes__name=required_scope
+            ).require_valid().first()
+        except Token.DoesNotExist:
+            token = None
+
+        if not token:
+            # No valid token available, cache as unknown for shorter time
+            cache.set(cache_key, "No Token", 60)
+            return "No Token"
+
+        # Make authenticated ESI API request
         esi_url = getattr(settings, 'ESI_API_URL', 'https://esi.evetech.net/')
         api_url = f"{esi_url}latest/characters/{character_id}/online/"
 
-        response = requests.get(
-            api_url,
-            headers={
-                'User-Agent': 'Alliance Auth Orientation Module',
-                'Cache-Control': 'no-cache'
-            },
-            timeout=10
-        )
+        headers = {
+            'Authorization': f'Bearer {token.access_token}',
+            'User-Agent': 'Alliance Auth Orientation Module',
+            'Cache-Control': 'no-cache'
+        }
+
+        response = requests.get(api_url, headers=headers, timeout=10)
 
         if response.status_code == 200:
             online_data = response.json()
-            is_online = online_data.get('online', False)
-            status = "Online" if is_online else "Offline"
+        elif response.status_code == 401:
+            # Token expired or invalid, cache as no token
+            cache.set(cache_key, "Token Invalid", 60)
+            return "Token Invalid"
         else:
-            status = "Unknown"
+            # Other error
+            cache.set(cache_key, "Unknown", 60)
+            return "Unknown"
+
+        is_online = online_data.get('online', False)
+        status = "Online" if is_online else "Offline"
 
         # Cache for 5 minutes to avoid excessive API calls
         cache.set(cache_key, status, 60 * 5)
         return status
 
-    except Exception:
+    except Exception as e:
         # If API call fails, return unknown status and cache for shorter time
         cache.set(cache_key, "Unknown", 60)
         return "Unknown"
